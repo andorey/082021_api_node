@@ -48,20 +48,15 @@ app.get('/cities/:id', function (req, res){
     res.send(city)
 })
 
-let txt = 'test page';
 
-app.get('/test', function (req, res){
-    res.send(txt)
-})
-
-app.post('/test', function (req, res){
+app.post('/cities', function (req, res){
     let out = {
-        id: Date.now(),
-        name: req.body.id
+        id: cities.slice(-1)[0].id + 1,     //id: cities[cities.length-1].id + 1
+        name: req.body.name
     }
-    console.log(out);
-    txt += out.id;
-    res.send(out);
+    cities.push(out)
+    console.log(out)
+    res.send(cities);
 })
 
 app.listen(3008, function (){
