@@ -33,21 +33,14 @@ app.get('/cities', function (req, res){
     res.send(cities)
 })
 
-// app.get('/cities/:id', function (req, res){
-//     for (let i of cities){
-//         if (i.id === ~~req.params.id){
-//             res.send(i.name)
-//         }
-//     }
-// })
-
 app.get('/cities/:id', function (req, res){
-    let city = cities.find(function (el){
-        return el.id === ~~req.params.id
-    })
-    res.send(city)
+    try{
+        let city = cities.find( el => el.id === Number( req.params.id ) );
+        res.send(city.name ? city : '<button style="color: white; background-color: seagreen">empty</button>')
+    }catch{
+        res.send('<button style="color: white; background-color: indianred">the end object</button>')
+    }
 })
-
 
 app.post('/cities', function (req, res){
     let out = {
@@ -55,10 +48,10 @@ app.post('/cities', function (req, res){
         name: req.body.name
     }
     cities.push(out)
-    console.log(out)
-    res.send(cities);
+    console.log(req.body)
+    res.send(out);
 })
 
 app.listen(3008, function (){
-    console.log('API app started')
+    console.log('API started')
 })
