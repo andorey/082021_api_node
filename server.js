@@ -42,7 +42,7 @@ app.get('/cities/:id', function (req, res){     // replaced empty url with butto
     }
 })
 
-app.post('/cities', function (req, res){
+app.post('/cities', function (req, res){            // adding new elements to list
     const city = {
         id: cities.slice(-1)[0].id + 1,             //id: cities[cities.length-1].id + 1
         name: req.body.name
@@ -52,13 +52,23 @@ app.post('/cities', function (req, res){
     res.send(city);
 })
 
-app.put('/cities/:id', function (req, res){         // replace element's name
-    const city = cities.find(el => el.id === Number(req.params.id))
-    city.name = req.body.name;
+app.put('/cities/:id', function (req, res){         // replace the name and id of the element where id had priority
+    cities.map(el => el.id === Number(req.body.id || req.params.id) ? el.name = req.body.name : '')
     res.sendStatus(200)
 })
 
-app.delete('/cities/:id', function (req, res){      // remove item from list
+// app.put('/cities/:id', function (req, res){         // replace element's name
+//     const city = cities.find(el => el.id === Number(req.params.id))
+//     city.name = req.body.name;
+//     res.sendStatus(200)
+// })
+
+// app.delete('/cities', function (req, res){      // remove item from list with req.body.id
+//     cities = cities.filter(el => el.id !== Number(req.body.id))
+//     res.sendStatus(200)
+// })
+
+app.delete('/cities/:id', function (req, res){      // remove item from list with req.params.id
     cities = cities.filter(el => el.id !== Number(req.params.id))
     res.sendStatus(200)
 })
