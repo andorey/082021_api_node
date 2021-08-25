@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
+const db = require('./db')          //import from module created in db.js
 
 const app = express();
-let db;
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -28,37 +28,35 @@ app.use(bodyParser.urlencoded({ extended: true }))
 //     }
 // ]
 
-app.get('/', function(req, res){
+app.get('/', (req, res) => {
     res.send('you on my API')
 })
 
-app.get('/cities', function (req, res){
-    db.collection('cities').find().toArray((err, docs) => {
+app.get('/cities', (req, res) => {
+    db.get().collection('cities').find().toArray((err, docs) => {
         if (err) throw err;
         res.send(docs)
     })
 })
 
-app.get('/cities/:id', function (req, res){
-    db.collection('cities').findOne({_id: ObjectId(req.params.id)}, (err, docs) => {
+app.get('/cities/:id', (req, res) => {
+    db.get().collection('cities').findOne({_id: ObjectId(req.params.id)}, (err, docs) => {
         if (err) throw err;
         res.send(docs)
-        console.log(docs)
     });
 })
 
 app.post('/cities', function (req, res){
     const city = { name: req.body.name };
 
-    db.collection('cities').insertOne(city, (err, result) => {
+    db.get().collection('cities').insertOne(city, (err, result) => {
         if (err) throw err;
         res.send(city)
-        console.log(result)
     })
 })
 
 app.put('/cities/:id',  (req, res) => {
-    db.collection('cities')
+    db.get().collection('cities')
         .updateOne(
             { _id: ObjectId(req.params.id) },
             { $set:{ name: req.body.name } },   // don't forget to use {$ set: {...}}
@@ -86,18 +84,26 @@ app.put('/cities/:id',  (req, res) => {
 //     })
 // })
 
-app.delete('/cities/:id', function (req, res){
-    db.collection('cities').deleteOne({ _id: ObjectId(req.params.id)}, (err, result) => {
+app.delete('/cities/:id', (req, res) => {
+    db.get().collection('cities').deleteOne({ _id: ObjectId(req.params.id)}, (err, result) => {
         if (err) throw err;
         res.sendStatus(200)
     })
 })
 
-MongoClient.connect('mongodb://localhost:27017', (err, client) => {
-    if (err) throw err
-    db = client.db('myapi');
+// MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+//     if (err) throw err
+//     db =  client.db('myapi');
+//
+//     app.listen(3008, function (){
+//         console.log('API started with db')
+//     })
+// })
 
-    app.listen(3008, function (){
+db.connect( function( err ) {
+    if (err) throw err;
+
+    app.listen( 3008, function (){
         console.log('API started with db')
     })
-})
+} );
