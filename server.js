@@ -43,8 +43,8 @@ app.get('/cities/:id', function (req, res){
     db.collection('cities').findOne({_id: ObjectId(req.params.id)}, (err, docs) => {
         if (err) throw err;
         res.send(docs)
+        console.log(docs)
     });
-    console.log(req.params)
 })
 
 app.post('/cities', function (req, res){
@@ -57,11 +57,19 @@ app.post('/cities', function (req, res){
     })
 })
 
-// app.put('/cities/:id', function (req, res){         // replace the name and id of the element where id had priority
-//     cities.map(el => el.id === Number(req.body.id || req.params.id) ? el.name = req.body.name : '')
-//     res.sendStatus(200)
-// })
-//
+app.put('/cities/:id',  (req, res) => {
+    db.collection('cities')
+        .updateOne(
+            { _id: ObjectId(req.params.id) },
+            { $set:{ name: req.body.name } },   // don't forget to use {$ set: {...}}
+            (err, result) => {
+                if (err) throw err;
+                res.sendStatus(200)
+                console.log(result)
+            }
+        )
+})
+
 // app.delete('/cities/:id', function (req, res){      // remove item from list with req.params.id
 //     cities = cities.filter(el => el.id !== Number(req.params.id))
 //     res.sendStatus(200)
