@@ -39,25 +39,24 @@ app.get('/cities', function (req, res){
     })
 })
 
-// app.get('/cities/:id', function (req, res){     // replaced empty url with buttons
-//     try{
-//         const city = cities.find( el => el.id === Number( req.params.id ) );
-//         res.send(city.name ? city : '<button style="color: white; background-color: seagreen">empty</button>')
-//     }catch{
-//         res.send('<button style="color: white; background-color: indianred">the end object</button>')
-//     }
-// })
-//
-// app.post('/cities', function (req, res){            // adding new elements to list
-//     const city = {
-//         id: cities.slice(-1)[0].id + 1,             //id: cities[cities.length-1].id + 1
-//         name: req.body.name
-//     }
-//     cities.push(city)
-//     console.log(req.body)
-//     res.send(city);
-// })
-//
+app.get('/cities/:id', function (req, res){
+    db.collection('cities').findOne({_id: ObjectId(req.params.id)}, (err, docs) => {
+        if (err) throw err;
+        res.send(docs)
+    });
+    console.log(req.params)
+})
+
+app.post('/cities', function (req, res){
+    const city = { name: req.body.name };
+
+    db.collection('cities').insertOne(city, (err, result) => {
+        if (err) throw err;
+        res.send(city)
+        console.log(result)
+    })
+})
+
 // app.put('/cities/:id', function (req, res){         // replace the name and id of the element where id had priority
 //     cities.map(el => el.id === Number(req.body.id || req.params.id) ? el.name = req.body.name : '')
 //     res.sendStatus(200)
