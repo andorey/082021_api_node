@@ -65,15 +65,33 @@ app.put('/cities/:id',  (req, res) => {
             (err, result) => {
                 if (err) throw err;
                 res.sendStatus(200)
-                console.log(result)
             }
         )
 })
 
-// app.delete('/cities/:id', function (req, res){      // remove item from list with req.params.id
-//     cities = cities.filter(el => el.id !== Number(req.params.id))
-//     res.sendStatus(200)
+// alternative method
+// app.put('/cities/:id',  (req, res) => {
+//     db.collection('cities')
+//     .updateOne(
+//         { _id: ObjectId(req.params.id) },
+//         { $set:{ name: req.body.name } },   // don't forget to use {$ set: {...}}
+//         {upsert: true}
+//     )
+//     .then((obj) => {
+//         console.log('Updated - ' + obj);
+//         res.sendStatus(200)
+//     })
+//     .catch((err) => {
+//         console.Error('Error: ' + err);
+//     })
 // })
+
+app.delete('/cities/:id', function (req, res){
+    db.collection('cities').deleteOne({ _id: ObjectId(req.params.id)}, (err, result) => {
+        if (err) throw err;
+        res.sendStatus(200)
+    })
+})
 
 MongoClient.connect('mongodb://localhost:27017', (err, client) => {
     if (err) throw err
