@@ -40,7 +40,7 @@ app.get('/cities', (req, res) => {
 })
 
 app.get('/cities/:id', (req, res) => {
-    db.get().collection('cities').findOne({_id: ObjectId(req.params.id)}, (err, docs) => {
+    db.get().collection('cities').findOne( { _id: ObjectId(req.params.id ) }, (err, docs) => {
         if (err) throw err;
         res.send(docs)
     });
@@ -99,11 +99,12 @@ app.delete('/cities/:id', (req, res) => {
 //         console.log('API started with db')
 //     })
 // })
+// below is the imported module which replaces the above function
 
-db.connect( function( err ) {
+db.connect( err  => {
     if (err) throw err;
 
-    app.listen( 3008, function (){
+    app.listen( 3008,  () => {
         console.log('API started with db')
     })
 } );

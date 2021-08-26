@@ -7,14 +7,14 @@ const state = {
 
 module.exports = {
 
-    connect: function( callback ) {
+    connect: callback  => {
         MongoClient.connect( url,  { useNewUrlParser: true }, function( err, client ) {
             state.db = client.db('myapi');
             return callback( err );
         } );
     },
 
-    get: function() {
+    get: () => {
         return state.db;
     }
 };
