@@ -2,49 +2,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ObjectId = require('mongodb').ObjectId;
 const db = require('./db')          //import from module created in db.js
+const citiesController = require('./controllers/cities_contr');
 
 const app = express();
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
-
-// let cities = [
-//     {
-//         id:1,
-//         name: 'London'
-//     },
-//     {
-//         id:2,
-//         name: 'Warsaw'
-//     },
-//     {
-//         id:3,
-//         name:'Philadelphia'
-//     },
-//     {
-//         id:4,
-//         name:'Hamilton'
-//     }
-// ]
 
 app.get('/', (req, res) => {
     res.send('you on my API')
 })
 
-app.get('/cities', (req, res) => {
-    db.get().collection('cities').find().toArray((err, docs) => {
-        if (err) throw err;
-        res.send(docs)
-    })
-})
+app.get('/cities', citiesController.all)
 
-app.get('/cities/:id', (req, res) => {
-    db.get().collection('cities').findOne( { _id: ObjectId(req.params.id ) }, (err, docs) => {
-        if (err) throw err;
-        res.send(docs)
-    });
-})
+app.get('/cities/:id', citiesController.findById)
 
 app.post('/cities', function (req, res){
     const city = { name: req.body.name };
