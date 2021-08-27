@@ -15,5 +15,19 @@ module.exports = {
         })
     },
 
+    insert: (req, res) => {
+        const city = { name: req.body.name}
+        City.insert(city, (err, result) =>{
+            if (err) throw err;
+            res.send(city)
+        })
+    },
+
+    update: (req, res) => {
+        City.update(req.params.id, req.body.name, (err, result) => {
+            if (err) throw err;
+            res.sendStatus(200)
+        })
+    }
 
 }

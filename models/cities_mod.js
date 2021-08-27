@@ -14,6 +14,22 @@ module.exports = {
         })
     },
 
+    insert: (city, callback) => {
+        db.get().collection('cities').insertOne(city, (err, result) => {
+            callback(err, result)
+        })
+    },
+
+    update: (id, newData, callback) => {
+        db.get().collection('cities').updateOne(
+            { _id: ObjectId(id) },
+            { $set: {name: newData} },
+            (err, result) => {
+                callback(err, result)
+            }
+        )
+    },
+
 
 
 }

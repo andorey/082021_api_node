@@ -17,43 +17,9 @@ app.get('/cities', citiesController.all)
 
 app.get('/cities/:id', citiesController.findById)
 
-app.post('/cities', function (req, res){
-    const city = { name: req.body.name };
+app.post('/cities', citiesController.insert)
 
-    db.get().collection('cities').insertOne(city, (err, result) => {
-        if (err) throw err;
-        res.send(city)
-    })
-})
-
-app.put('/cities/:id',  (req, res) => {
-    db.get().collection('cities')
-        .updateOne(
-            { _id: ObjectId(req.params.id) },
-            { $set:{ name: req.body.name } },   // don't forget to use {$ set: {...}}
-            (err, result) => {
-                if (err) throw err;
-                res.sendStatus(200)
-            }
-        )
-})
-
-// alternative method
-// app.put('/cities/:id',  (req, res) => {
-//     db.collection('cities')
-//     .updateOne(
-//         { _id: ObjectId(req.params.id) },
-//         { $set:{ name: req.body.name } },   // don't forget to use {$ set: {...}}
-//         {upsert: true}
-//     )
-//     .then((obj) => {
-//         console.log('Updated - ' + obj);
-//         res.sendStatus(200)
-//     })
-//     .catch((err) => {
-//         console.Error('Error: ' + err);
-//     })
-// })
+app.put('/cities/:id',  citiesController.update)
 
 app.delete('/cities/:id', (req, res) => {
     db.get().collection('cities').deleteOne({ _id: ObjectId(req.params.id)}, (err, result) => {
