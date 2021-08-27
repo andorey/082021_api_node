@@ -30,6 +30,10 @@ module.exports = {
         )
     },
 
-
+    delete: (id, callback) => {
+        db.get().collection('cities').deleteOne( { _id: ObjectId(id)}, (err, result) => {
+            callback(err, result)
+        })
+    }
 
 }

@@ -28,6 +28,13 @@ module.exports = {
             if (err) throw err;
             res.sendStatus(200)
         })
+    },
+
+    delete: (req, res) => {
+        City.delete(req.params.id, (err, result) => {
+            if (err) throw arr;
+            res.sendStatus(200)
+        })
     }
 
 }
